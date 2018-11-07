@@ -1,0 +1,367 @@
+function wpj_number_to_price( $total, number_to_format ) {
+	var decimal        = $total.data( "decimal" ) || '.';
+	var thousands      = $total.data( "thousands" ) || ',';
+	var decimaldisplay = $total.data( "decimaldisplay" ) || 'default';
+
+	var formatted_price = String( number_to_format.formatMoney( 2, decimal, thousands ) );
+
+	if ( decimaldisplay == "ifneeded" ) {
+		if ( isInt( chargable_total ) ) {
+			formatted_price = String( number_to_format.formatMoney( 0, decimal, thousands ) );
+		} else {
+			formatted_price = String( number_to_format.formatMoney( 2, decimal, thousands ) );
+		}
+	} else if ( decimaldisplay == "never" ) {
+		formatted_price = String( number_to_format.formatMoney( 0, decimal, thousands ) );
+	}
+
+	return formatted_price;
+}
+
+function wpj_get_job_total_cost_after_discount( obj ) {
+	// Total
+	price_total = parseFloat( jQuery( '.total' ).attr( 'data-total-no-tax' ) );
+
+	// Discount
+	if ( obj['results'][0]['type'] == 'percent' ) {
+		price = obj['results'][0]['price'];
+		discount = ( price * price_total ) / 100;
+		discount = parseFloat( discount );
+	} else {
+		price = obj['price'];
+		discount = parseFloat( price );
+	}
+
+	return discount;
+}
+
+function wpj_get_unique_class_name( $class_name = '' ) {
+	var uniqueClasses = {};
+
+	jQuery( $class_name ).each( function() {
+		var classes = jQuery( this ).attr( 'class' ).split( /\s+/ );
+		jQuery.each( classes, function( index, className ) {
+			if ( className === "shipping" ) {
+				return;
+			}
+			uniqueClasses[className] = true;
+		});
+	});
+
+	return uniqueClasses;
+}
+
+function wpj_update_total_after_discount( discount_code = '', obj = '', action = '' ) {
+	// Clear the status message
+	if ( action == 'existing_acc' ) {
+		$( '.discount_status' ).html( '' ).hide();
+	}
+
+	// Empty the input for discount code
+	jQuery( '.discount-code' ).val( '' );
+
+	var discount = 0; var count = 0;
+	jQuery( ".total" ).each( function() { count++;
+		// Vars
+		var $total    = jQuery( this );
+		var symbol    = $total.data( "symbol" )   || $total.data( "cur" );
+		var position  = $total.data( "position" ) || '';
+		var space     = $total.data( "space" )    || 'yes';
+		var space_str = "";
+		if ( space == "yes" ) { space_str = " "; }
+
+		// Discount value
+		discount = wpj_get_job_total_cost_after_discount( obj );
+
+		// Discount value formatted
+		var formatted_price = wpj_number_to_price( $total, discount );
+
+		// Insert or update the coupon
+		if ( count <= 1 ) {
+			if ( jQuery( '.coupon-' + discount_code ).length ) {
+
+				// Update coupon details in checkout list
+				if ( position == "front" ) {
+					jQuery( '.coupon-' + discount_code ).children( '.coupon-amount' ).html( symbol + space_str + '-' + formatted_price );
+				} else {
+					jQuery( '.coupon-' + discount_code ).children( '.coupon-amount' ).html( '-' + formatted_price + space_str + symbol );
+				}
+				jQuery( '.coupon-' + discount_code ).next( '.discount-value' ).val( discount_code + '/' + discount );
+			} else {
+
+				// Insert coupon details in checkout list
+				if ( position == "front" ) {
+					var coupon_content = '<div data-discount="' + discount + '" data-type="' + obj['results'][0]['type'] + '" data-value="' + obj['results'][0]['price'] + '" data-min-amount="' + obj['results'][0]['minimum_amount'] + '" class="shipping coupon-' + discount_code + '">' + discount_vars.lbl_coupon + ': ' + discount_code + ' <i class="remove-discount close icon"></i><span class="coupon-amount extra-price-inside">' + symbol + space_str + '-' + formatted_price + '</span></div>';
+				} else {
+					var coupon_content = '<div data-discount="' + discount + '" data-type="' + obj['results'][0]['type'] + '" data-value="' + obj['results'][0]['price'] + '" data-min-amount="' + obj['results'][0]['minimum_amount'] + '" class="shipping coupon-' + discount_code + '">' + discount_vars.lbl_coupon + ': ' + discount_code + ' <i class="remove-discount close icon"></i><span class="coupon-amount extra-price-inside">' + '-' + formatted_price + space_str + symbol + '</span></div>';
+				}
+
+				var before_class = jQuery( ".js-processingtax" )[0] ? '.js-processingtax' : '.apply-dicounts-wrapper';
+
+				jQuery( coupon_content + '<input class="discount-value" type="hidden" name="discount_value[]" value="' + discount_code + '/' + discount + '" />' ).insertBefore( before_class );
+
+			}
+		}
+	});
+
+	// Update coupon data with new discount value
+	jQuery( '.coupon-' + discount_code ).attr( 'data-discount', discount );
+
+	// Send discount as a data for buy button to checkout page
+	var discount_total = 0;
+	jQuery( ".total" ).attr( 'data-discount', discount_total );
+
+	uniqueClasses = wpj_get_unique_class_name( 'div[class*="coupon-"]' );
+	jQuery.each( uniqueClasses, function( className ) {
+		discount_total += parseFloat( jQuery( '.' + className ).attr( 'data-discount' ) );
+	});
+
+	jQuery( ".total" ).attr( 'data-discount', discount_total );
+
+	// Update price on buy button
+	if ( typeof updatePurchasePrice === "function" ) {
+		updatePurchasePrice( "job_purchase" );
+	}
+}
+
+function wpj_show_hide_account_balance_button() {
+	if ( typeof updatePurchasePrice === "function" ) {
+		updatePurchasePrice( "job_purchase" );
+	}
+
+	price_total = parseFloat( jQuery( '.total' ).attr( 'data-total' ) );
+	discount_total = parseFloat( jQuery( '.total' ).attr( 'data-discount' ) );
+
+	if ( discount_vars.user_balance < price_total ) {
+		jQuery( '#credits' ).hide();
+	} else {
+		jQuery( '#credits' ).show();
+	}
+}
+
+jQuery( document ).ready( function( $ ) {
+
+	// Initialize the calendar for input data
+	$( '#start_date_input_ui' ).wpjcalendar( 'discount' );
+	$( '#end_date_input_ui' ).wpjcalendar( 'discount' );
+
+	// Remove disabled attr to send post to PHP
+	$( '#purchase-form' ).submit( function( e ) {
+		$( ':disabled' ).each( function( e ) {
+			$( this ).removeAttr( 'disabled' );
+		})
+	});
+
+	// Copy the code from sidebar input to order additional input and vice versa
+	$( '.discount-code' ).on( 'keyup change paste', function( e ) {
+		$( '.discount-code' ).val( $( this ).val() )
+	});
+
+	discounts = [];
+
+	// List of applied coupons on single job page
+	if ( $( '.sn-discount-code-arr' ).val() ) {
+		discounts = discounts.concat( $( '.sn-discount-code-arr' ).val().split( "," ) );
+	}
+
+	// Send total coupons value from single job page to checkout page
+	$( ".total" ).each( function() {
+		$( this ).attr( 'data-discount', $( '.sn-discount-value-arr' ).val() );
+	});
+
+	// Show or hide account balance button
+	wpj_show_hide_account_balance_button();
+
+	// Change seller discount value label
+	$( ".js-discount-type" ).dropdown({
+		onChange: function ( val ) {
+			if ( val == 'fixed' ) {
+				$( '.js-percent' ).hide();
+				$( '.js-fixed' ).show();
+			} else {
+				$( '.js-percent' ).show();
+				$( '.js-fixed' ).hide();
+			}
+		}
+	});
+
+
+	// Add new discount
+	$( document ).on( 'click', '#apply_discount', function( e ) {
+
+		e.preventDefault();
+
+		var discount_code = $( this ).siblings( '.discount-inp' ).children( '.discount-code' ).val();
+		var pid = $( '.sn-post_id' ).val();
+		var pck_price_val = $( '.pck_price_val' ).val();
+
+		// ERROR - coupon already applied
+		if ( discounts.includes( discount_code ) == true ) {
+			$( '.discount_status' ).addClass( 'negative' ).removeClass( 'success' );
+			$( '.discount_status' ).html( '<i class="exclamation circle icon"></i>' + discount_vars.lbl_coupon_already_applied + '!' ).show();
+			return false;
+		}
+
+		// Make a list with current inserted coupons
+		// to avoid inseration of same coupon multiple times
+		if ( discount_code ) {
+			discounts.push( discount_code );
+		}
+
+		// Add a loader while PHP send the response
+		$( '.ui.icon.input.loading.discount-inp' ).append( '<i class="search icon"></i>' );
+
+		jQuery.ajax({
+			type: "POST",
+			url: discount_vars.ajax_url,
+			data: {
+				action: 'apply_discount_code',
+				discount_code: discount_code,
+				pid: pid,
+				pck_value: pck_price_val
+			},
+			success: function( data ) {
+				// Remove loader
+				$( '.ui.icon.input.loading.discount-inp i.search.icon' ).remove();
+
+				// Parse data received from PHP
+				obj = JSON.parse( data );
+
+				// Show the positive or negative message
+				if ( obj['messages']['ok'] == true ) {
+					$( '.discount_status' ).addClass( 'success' );
+					$( '.discount_status' ).removeClass( 'negative' );
+					var icon = '<i class="check circle icon"></i>';
+				} else {
+					$( '.discount_status' ).addClass( 'negative' );
+					$( '.discount_status' ).removeClass( 'success' );
+					var icon = '<i class="exclamation circle icon"></i>';
+
+					// Remove discount code from current inserted array if the code is not valid
+					var index = discounts.indexOf( discount_code );
+					if ( index > -1 ) {
+						discounts.splice( index, 1 );
+					}
+				}
+				$( ".discount_status" ).each( function() {
+					$( this ).html( icon + obj['messages']['content'] ).show();
+				});
+
+				// Execute if the code is valid
+				if ( obj['messages']['ok'] == true ) {
+
+					// ERROR - coupon discount is bigger than job price
+					price_total = parseFloat( jQuery( '.total' ).attr( 'data-total-no-tax' ) );
+					discount = wpj_get_job_total_cost_after_discount( obj );
+
+					if ( price_total <= ( parseFloat( discount ) + parseFloat( jQuery( ".total" ).attr( 'data-discount' ) ) ) ) {
+						$( '.discount_status' ).addClass( 'negative' ).removeClass( 'success' );
+						$( '.discount_status' ).html( '<i class="exclamation circle icon"></i>' + discount_vars.lbl_total_discount_greater_than_amount + '!' ).show();
+
+						// Remove code from list of applied coupons
+						discounts = jQuery.grep( discounts, function( value ) {
+							return value != discount_code;
+						});
+
+						return false;
+					}
+
+					// Insert the coupon
+					wpj_update_total_after_discount( discount_code, obj, 'new_acc' );
+				}
+
+				// Show or hide account balance button
+				wpj_show_hide_account_balance_button();
+
+				// Insert job max total price(extra + extra fast + additional revision)
+				$( '<input type="hidden" class="job-total-price" value="' + parseFloat( obj['job_price'] ) + '" />' ).insertAfter( '#job-packages' );
+			}
+		});
+	});
+
+	// Remove discount
+	$( document ).on( 'click', '.remove-discount', function( e ) {
+		e.preventDefault();
+
+		// Get discount code and value
+		var discount_arr = $( this ).parents( '.shipping' ).next( '.discount-value' ).val().split( '/' );
+		var discount_code = discount_arr[0];
+		var discount_value = discount_arr[1];
+
+		// Send discount as a data for buy button to checkout page
+		if ( $( ".total" ).attr( 'data-discount' ) ) {
+			if ( discount_value > 0 ) {
+				discount_value = parseFloat( $( ".total" ).attr( 'data-discount' ) ) - discount_value;
+			}
+		}
+
+		if ( discount_value <= 0 ) {
+			discount_value = 0;
+		}
+
+		// Update total discount value in total button
+		$( ".total" ).attr( 'data-discount', discount_value );
+
+		// Update price on buy button
+		if ( typeof updatePurchasePrice === "function" ) {
+			updatePurchasePrice( "job_purchase" );
+		}
+
+		// Remove code from list of applied coupons
+		discounts = jQuery.grep( discounts, function( value ) {
+			return value != discount_code;
+		});
+
+		// Clear the status message
+		$( '.discount_status' ).html( '' ).hide();
+
+		// Remove from front-end
+		$( '.coupon-' + discount_code ).next( '.discount-value' ).remove();
+		$( '.coupon-' + discount_code ).remove();
+
+		// Show or hide account balance button
+		wpj_show_hide_account_balance_button();
+	});
+
+	// Check/Uncheck Extra & Change package price
+	$( ".uzextracheck[type=checkbox], .pck-order, .pck-sidebar-select-package, .amount_add, .amount_rmv" ).on( 'click change', function( e ) {
+		if ( $( 'div[class*="coupon-"]' ).length ) {
+			$( 'div[class*="coupon-"]' ).each( function() {
+				var coupons_class = $( this ).attr( "class" );
+				var coupons_arr = coupons_class.split( "-" );
+				var coupon_code = coupons_arr[1];
+
+				var coupons_type = $( this ).attr( "data-type" );
+				var coupons_value = $( this ).attr( "data-value" );
+
+				obj = { "price" : coupons_value, "results" : { "0" : { "type" : coupons_type, "price": coupons_value } } }
+
+				wpj_update_total_after_discount( coupon_code, obj, 'existing_acc' );
+
+				if ( parseFloat( jQuery( '.total' ).attr( 'data-total-no-tax' ) ) <= parseFloat( jQuery( ".total" ).attr( 'data-discount' ) ) ) {
+					$( this ).children( '.remove-discount' ).trigger( 'click' );
+				}
+			});
+		}
+
+		// Show or hide account balance button
+		wpj_show_hide_account_balance_button();
+	});
+
+	// Remove discount if selected pacakge is lower than minimum amount
+	$( ".pck-order, .pck-sidebar-select-package" ).on( 'click', function( e ) {
+		if ( $( 'div[class*="coupon-"]' ).length ) {
+			$( 'div[class*="coupon-"]' ).each( function() {
+				var coupon_min_amount = $( this ).attr( "data-min-amount" );
+				var job_total_price = parseFloat( $( '.job-total-price' ).val() ) + parseFloat( $( '.pck_price_val' ).val() );
+
+				if ( job_total_price && coupon_min_amount != 0 ) {
+					if ( job_total_price < coupon_min_amount ) {
+						$( this ).children( '.remove-discount' ).trigger( 'click' );
+					}
+				}
+			});
+		}
+	});
+
+});
