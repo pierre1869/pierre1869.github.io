@@ -1,203 +1,253 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Weather Forecast</title>
+	<div class="main">
 
-  <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!-- Header -->
 
-  <!--build:css css/app.min.css-->
-  <link rel="stylesheet" href="stylesheet/css/dialog-polyfill.css">
-  <link rel="stylesheet" href="stylesheet/css/main.css">
-  <!-- endbuild -->
+	<header class="header">
 
-</head>
-<body>
-    <dialog class="mdl-dialog" id="dialog">
-      <h4 class="mdl-dialog__title">Find a Forecast</h4>
-      <div class="mdl-dialog__content">
-        <form action="#" id="search-form">
-          <div class="mdl-textfield mdl-js-textfield">
-            <input class="mdl-textfield__input" type="text" id="search-field">
-            <label class="mdl-textfield__label" for="search-field">Search for location or keyword</label>
-          </div>
-        </form>
-      </div>
-      <div class="mdl-dialog__actions">
-        <button type="button" class="mdl-button search-button">Search</button>
-        <button type="button" class="mdl-button dialog-close">Close</button>
-      </div>
-    </dialog>
+      <div class="container">
+      	<div class="twelve columns">
+        	<nav>
+             	<ul>
+                	<li><a href="#about">Profile</a></li>
+                  <li><a href="#services">Services</a></li>
+                  <li><a href="#work">Work</a></li>
+                  <li><a href="#contact">Contact</a></li>
+              	</ul>
 
-  <div class="loading-indicator">
-    <div class="mdl-spinner mdl-js-spinner is-active spinner"></div>
-  </div>
-
-  <div class="main">
-
-    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-tabs">
-      <header class="mdl-layout__header">
-
-        <div class="mdl-layout__header-row">
-          <span class="mdl-layout-title location"></span>
-
-          <div class="mdl-layout-spacer"></div>
-
-          <nav class="mdl-navigation mdl-layout--large-screen-only">
-
-            <a class="mdl-navigation__link refresh-weather">
-              <i class="material-icons">refresh</i>
-            </a>
-
-            <a class="mdl-navigation__link search-icon">
-              <i class="material-icons">search</i>
-            </a>
-
-            <a class="mdl-navigation__link" id="temperature-unit">
-              <i class="material-icons">more_vert</i>
-            </a>
-
-            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-    for="temperature-unit">
-              <li class="mdl-menu__item">
-                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
-                  <input type="radio" id="option-1" class="mdl-radio__button celsius" name="options" value="celsius" checked>
-                  <span class="mdl-radio__label">Celsius</span>
-                </label>
-              </li>
-
-              <li class="mdl-menu__item">
-                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
-                  <input type="radio" id="option-2" class="mdl-radio__button fahrenheit" name="options" value="fahrenheit">
-                  <span class="mdl-radio__label">Fahrenheit</span>
-                </label>
-
-              </li>
-
-            </ul>
-
-
-          </nav>
-
-
+        	</nav>
+        </div>
+        
+        <div class="ten columns offset-by-one headertext">
+        	<img src="data:image/jpeg;base64,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">
+        	<h1>Peter Mkwawa</h1>
+        	<p class="keypoints">Developer. Designer. Consultant. Writer. </p>
+        	<p>I'm a Front-End Web Developer living in Dar Es Salaam, Tanzania and I'd love to help you on your next web project.</p>
+        	<a href="#about"><button class="btn" data-section="2">Learn More</button></a>
         </div>
 
-        <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-           <a href="#fixed-tab-1" class="mdl-layout__tab is-active">Today</a>
-           <a href="#fixed-tab-2" class="mdl-layout__tab">Tomorrow</a>
-           <a href="#fixed-tab-3" class="mdl-layout__tab">Later</a>
-        </div>
-
-      </header>
-
-      <div class="mdl-layout__drawer mdl-layout--small-screen-only">
-        <span class="mdl-layout-title">Weather Forecast</span>
-        <nav class="mdl-navigation">
-
-          <a class="mdl-navigation__link refresh-weather">
-            Refresh
-          </a>
-
-          <a class="mdl-navigation__link search-icon">
-            Search
-          </a>
-
-          <a class="mdl-navigation__link">
-            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-3">
-              <input type="radio" id="option-3" class="mdl-radio__button celsius" name="options" value="celsius" checked>
-              <span class="mdl-radio__label">Celsius</span>
-            </label>
-          </a>
-
-          <a class="mdl-navigation__link">
-            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-4">
-              <input type="radio" id="option-4" class="mdl-radio__button fahrenheit" name="options" value="fahrenheit">
-              <span class="mdl-radio__label">Fahrenheit</span>
-            </label>
-          </a>
-        </nav>
-      </div>
+       </div>
+  	</header>
 
 
-      <section class="mdl-layout__content content-area">
+		<!-- About me -->
+		
+		<section class="about" id="about" data-section="2">
+			<div class="container">
+				<div class="ten columns offset-by-one">
+					<h2>About me...</h2>
+					<p>I'm a 23-year-old self-taught Software Engineer/Developer with a great passion for coding. I code and study computer programming intensively, mentor new developers, write technical content, and share my passion for programming to over 30k+ people on social media, in order to spearhead effective utilization of technology in solving our day to day problems.</p>
+					<p>As a creator I want everything I produce to have meaning. And because of that I often fall into the trap of holding onto content instead of releasing it. And that's something that I want to change.
+
+Because the more that I produce, create, and share -- the faster I will grow as a creative.</p>
+					<p class="push-down">Driven by curiosity and a deep desire to, learn, create, share, and eventually grow I am a self-motivated Software Developer, Avid reader, Writer and Designer with burning desire and passion to succeed in learning, building, writing, designing scalable, products and with over 1500+ documented hours devoted to better my craft also picking up new skills. Also a lifetime commitment to lifelong learning
+
+Highly motivated and focused individual who works extremely well as a Team Leader and Team Member to achieve Goals. 
+Have the ability to quickly grasp new technical and business environment's concepts and have focused positive attitude to new challenges </p>
+				</div>
+
+				<div class="row">
+					<div class="social-icons">
+						<div class="ten columns offset-by-one">
+							<ul>
+								<li><a href="https://facebook.com/cfc.ayo"><img src="https://i.imgur.com/Yvm2f6a.png"></a></li>
+								<li><a href="https://twitter.com/ayisaiah"><img src="https://i.imgur.com/1OhdrUC.png"></a></li>
+								<li><a href="https://plus.google.com/+ayoisaiah22"><img src="https://i.imgur.com/ujjVEeR.png"></a></li>
+								<li><a href="skype:aisaiah3"><img src="https://i.imgur.com/m2XToJs.png"></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+		
+			</div>
+		</section>
+		
+		<!-- Services -->
+
+		<section class="services" id="services">
+				<div class="container">
+
+						<div class="ten columns offset-by-one servicetext">
+							<h2>My Services</h2>
+							
+						</div>
+
+						
+						<div class="ten columns offset-by-one">
+							<h3>What I can do for you</h3>
+
+							<section>
+								<h4>Consulting</h4>
+								<p>I can offer my expertise as an IT consultant available to work with both for and not for profits organisations .</p>
+							</section>
+
+							<section>
+								<h4>Design</h4>
+	I have a solid background with desiging from graphics, infographics, and user experience .</p>
+							</section>
+
+							<section>
+								<h4>Development</h4>
+								<p>I am a self-taught Software engineer with great passion for coding and all things technical. I can build great interactive and responsive website and web apps.
+                  <p>Staying ahead of the curve by always being authentic, perfecting my craft learning a new skill, dig out about the new emerging technologies. </p>
+							</section>
+						
+							
+						</div>
+					
+				</div>
+	
+		</section>		
+
+		<!-- My Work -->
+		
+		<section class="work" id="work">
+				<div class="container">
+					<div class="ten columns offset-by-one worktext">
+						<h2>View my recent projects</h2>
+						<p>I am dedicating this site as a portal for showcasing my recent and future projects mostly in software development! Also from time to time I will be publishing articles and my different journals covering different subjects annd th emes from poetry, thriller, satire,fiction and whatever my sleepless heart can conjure</p>
+            
+            <p>TO ALL THE KINDRED SPIRITS WHO HAVE SUPPORTED ME IN MY CREATIVE EANDEVORS, YOUR ADVICE, LOVE, ENCOURAGEMENT, AND KINDNESS IS KEEPING ME GOING THROUGH THE HIGHEST HIGHS AND LOWEST LOWS. FROM THE DEEPEST BOTTOM OF MY HEART I SAY THANK YOU AND HOPE THAT IN SOME SMALL WAY I  MAY INSPIRE, UPLIFT, FASCINATE, & OCCASIONALLY... FRIGHTEN THE HELL OUT YOU</p>
+					</div>
+				</div>
+
+				<div class="container">
+					<div class="twelve columns">
+					<div class="imageGallery">
+
+						<div class="row">
+							<div class="one-third column">
+								<figure>
+									<a href="#">
+										<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/000080_Navy_Blue_Square.svg/2000px-000080_Navy_Blue_Square.svg.png" alt="">
+										<figcaption>Placeholder 1</figcaption>
+									</a>
+								</figure>
+							</div>
+
+							<div class="one-third column">
+								<figure>
+									<a href="#">
+										<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/000080_Navy_Blue_Square.svg/2000px-000080_Navy_Blue_Square.svg.png" alt="">
+										<figcaption>Placeholder 2</figcaption>
+									</a>
+								</figure>
+							</div>
+
+							<div class="one-third column">
+								<figure>
+									<a href="#">
+										<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/000080_Navy_Blue_Square.svg/2000px-000080_Navy_Blue_Square.svg.png" alt="">
+										<figcaption>Placeholder 3</figcaption>
+									</a>
+								</figure>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="one-third column">
+								<figure>
+									<a href="#">
+										<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Auto_Racing_Green.svg/800px-Auto_Racing_Green.svg.png" alt="">
+										<figcaption>Placeholder 4</figcaption>
+									</a>
+								</figure>
+							</div>
+
+							<div class="one-third column">
+								<figure>
+									<a href="#">
+										<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Auto_Racing_Green.svg/800px-Auto_Racing_Green.svg.png" alt="">
+										<figcaption>Placeholder 5</figcaption>
+									</a>
+								</figure>
+							</div>
+
+							<div class="one-third column">
+								<figure>
+									<a href="#">
+										<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Auto_Racing_Green.svg/800px-Auto_Racing_Green.svg.png" alt="">
+										<figcaption>Placeholder 6</figcaption>
+									</a>
+								</figure>
+							</div>
+						</div>
+
+					</div>
+					</div>
+				</div>
+		</section>
+			
+						
+
+		<!-- Testimonials -->
+
+		<!-- Contact -->
+
+		<section class="contact" id="contact">
+			<div class="container">
+				<div class="contacttext">
+					<h2 class="">Get in Touch!</h2>
+					<h3>Contact Me</h3>
+				</div>
+
+				
+				<div class="row">
+
+					<div class="one-third column">
+						<p>I am available for freelance front-end web development gigs</p>
+						<p>
+• INTERESTED & OPEN for a challenging technical track career in Software Development(Front End)| Content Creating|Designing Infographics.</p>
+						<p><span>Email: </span>mkwawa[at]gmail[dot]com</p>
+						<p><span>Phone: </span>(+255)0756-946-782</p>
+					</div>
+					
+					<div class="two-thirds column form">
+						<form method="post"	action="">
+							
+							<div class="form-field">
+								<label class="label" for="name">Name: </label>
+								<input type="text" name="name" id="name" required>
+							</div>
+							
+							<div class="form-field">
+								<label for="email" class="label">Email:</label>
+								<input type="email" name="email" id="email" required>
+							</div>
+
+							<div class="form-field">
+								<label for="number" class="label">Phone: </label>
+								<input type="text" name="number" id="number">
+							</div>
+							
+							<div class="form-field">
+								<label for="website" class="label">Website: </label>
+								<input type="url" name="website" id="website">
+							</div>
+							
+							<div class="form-field">
+								<label for="email" class="label">Message: </label>
+								<textarea name="message" id="message" cols="30" rows="10"></textarea>
+							</div>
+
+							<button class="form-btn">Send!</button>
+						</form>
+					</div>
+
+				</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Footer -->
+
+		<footer class="footer">
+			<div class="container">
+				<div class="twelve coulmns">
+					<p>Copyright ©2018 Peter Mkwawa. All rights reserved.</p>
+				</div>
+			</div>
+		</footer>
 
 
-        <div class="mdl-layout__tab-panel is-active tab-panel" id="fixed-tab-1">
 
-          <div class="today tab-content">
-            <div class="mdl-grid special mdl-card mdl-shadow--2dp">
-              <div class="mdl-cell mdl-cell--1-offset-desktop mdl-cell--4-col">
-
-                <div class="basic-weather-info">
-                  <div class="main-info">
-                    <span class="temperature">0℃</span>
-                    <span class="description">No data</span>
-                  </div>
-                  <span class="wind">Wind: 0 m/s</span>
-                  <span class="pressure">Pressure: 0 hPa</span>
-                  <span class="humidity">Humidity: 0%</span>
-                  <span class="last-updated">No data</span>
-                </div>
-
-              </div>
-              <div class="mdl-cell mdl-cell--2-offset-desktop mdl-cell--4-col">
-
-                <div class="animated-icon">
-                  <canvas id="canvas" class="canvas" width="400" height="400"></canvas>
-                </div>
-
-              </div>
-            </div>
-
-            <div class="today-grid">
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="mdl-layout__tab-panel tab-panel" id="fixed-tab-2">
-
-          <div class="tomorrow tab-content">
-
-          </div>
-
-        </div>
-
-        <div class="mdl-layout__tab-panel tab-panel" id="fixed-tab-3">
-
-          <div class="later tab-content">
-
-          </div>
-
-        </div>
-
-         <footer class="footer">
-             <span class="credit">Developed by <a href="https://ayoisaiah.com">Ayo Isaiah</a>. Powered by <a href="http://darksky.net">Dark Sky</a>.</span>
-         </footer>
-
-      </section>
-
-       <a href="https://github.com/ayoisaiah/weather-app" target="_blank" id="view-source" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">View Source</a>
-
-    </div>
-
-
-
-
-  </div>
-
-  <!--build:js js/app.min.js -->
-  <script src="scripts/dialog-polyfill.js"></script>
-  <script src="scripts/material.min.js"></script>
-  <script src="scripts/jquery.min.js"></script>
-  <script src="scripts/skycons/skycons.js"></script>
-  <script src="scripts/babel/main.js"></script>
-  <!-- endbuild -->
-
-</body>
-</html>
+	</div>
