@@ -10,7 +10,7 @@
 		<body>
 		<p>WELCOME TO BellaVista & Co</p>
 			<a href="https://ibb.co/FhmVBYn"><img src="https://i.ibb.co/S65rKmJ/Presentation.jpg" alt="Presentation" width="1199" height="898" border="0"></a>
-			img src="https://github.com/pierre1869/pierre1869.github.io/blob/master/peter.jpg alt="Bella Vista Co" width="1020" height="888"</a>
+			
 			
 	     <p class="lead">Create amazing moments in B&C Estate.<br> Your dream vacation Desstination.</p>
 	      </div>
@@ -18,135 +18,17 @@
 
 	    </body>
 	
-	<body style="background-image:url('https://ibb.co/hmK7y25"><img src="https://i.ibb.co/mcHDGhs/steel-bc.jpg')">
+	<body style="background-image:url('https://images.pexels.com/photos/1023974/pexels-photo-1023974.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940  ')">
 
 <p>Background Image</p>
 
 </body>
 	
-	<header>
-		<div class="collapse bg-dark" id="navbarHeader">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-8 col-md-7 py-4">
-						<h4 class="text-white">About</h4>
-						<p class="text-muted">
-							background co.</p>
-					</div>
-					<div class="col-sm-4 offset-md-1 py-4">
-						<h4 class="text-white">Contact</h4>
-						<ul class="list-unstyled">
-							<li><a href="#" class="text-white">Follow on Twitter</a></li>
-							<li><a href="#" class="text-white">Like on Facebook</a></li>
-							<li><a href="#" class="text-white">Email me</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="navbar navbar-dark bg-dark shadow-sm">
-			<div class="container d-flex justify-content-between">
-				<a href="#" class="navbar-brand d-flex align-items-center">
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-					 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-						<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-						<circle cx="12" cy="13" r="4"></circle>
-					</svg>
-					<strong>Album</strong>
-				</a>
-				<div id="demo" class="carousel slide" data-ride="carousel">
-
-  <!-- Indicators -->
-  <ul class="carousel-indicators">
-    <li data-target="#demo" data-slide-to="0" class="active"></li>
-    <li data-target="#demo" data-slide-to="1"></li>
-    <li data-target="#demo" data-slide-to="2"></li>
-  </ul>
-
-  <!-- The slideshow -->
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="la.jpg" alt="Los Angeles">
-    </div>
-    <div class="carousel-item">
-      <img src="chicago.jpg" alt="Chicago">
-    </div>
-    <div class="carousel-item">
-      <img src="ny.jpg" alt="New York">
-    </div>
-  </div>
-
-  <!-- Left and right controls -->
-  <a class="carousel-control-prev" href="#demo" data-slide="prev">
-    <span class="carousel-control-prev-icon"></span>
-  </a>
-  <a class="carousel-control-next" href="#demo" data-slide="next">
-    <span class="carousel-control-next-icon"></span>
-  </a>
-
-</div>
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader"
-				 aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-			</div>
-		</div>
-	</header>
-	
-	<main role="main">
-	
-		<section class="jumbotron text-center">
-			<div class="container">
-				<h1 class="jumbotron-heading">Album example</h1>
-				<p class="lead text-muted">Something short and leading about the collection below—its contents, the
-					creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
-				<p>
-					<a href="#" class="btn btn-primary my-2">Main call to action</a>
-					<a href="#" class="btn btn-secondary my-2">Secondary action</a>
-				</p>
 	
 				<h1>Bella Vista Chateau page</h1>
 				<img src="{% static 'images/present.jpg' %}" class="img-fluid" alt="Bella Vista Chateau" />
 	
-				<br><br>
-				<hr>
-				{% for h in hoteldata %}
-				<div>
-					<h1>{{h.hotelname}}</h1>
-					<h1>{{h.hotellocation}}</h1>
-				</div>
-				{% endfor %}
-				<br><br>
-				<hr>
-				<table class="table">
-					<thead>
-						<tr>
-							<th scope="col">HotelId</th>
-							<th scope="col">hoteldata</th>
-							<th scope="col">hotellocation</th>
-							<th scope="col">Visitor</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% if hoteldata %}
-						{% for h in hoteldata%}
-						<tr>
-							<td>{{h.id}}</td>
-							<td>{{h.hotelname}}</td>
-							<td>{{h.hotellocation}}</td>
-							<td>{{h.visitor}}</td>
-						</tr>
-						{% endfor %}
-						{% else %}
-						<p>There no data to Display</p>
-						{% endif %}
-	
-					</tbody>
-				</table>
-	
-				</table>
-			</div>
-		</section>
+			
 	
 	
 		<div class="colorlib-loader"></div>
